@@ -4,7 +4,7 @@ const app = express();
 require('dotenv').config()
 
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mhvsuxa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -39,6 +39,18 @@ async function run() {
         
     })
    
+    app.get("/information/:id", async (req, res) => {
+        console.log(req.params.email);
+        const result = await spotsCollection.findOne({_id: new ObjectId (req.params.id),
+        })
+    })
+    app.delete("/information/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await spotsCollection.deleteOne(query);
+        res.send(result);
+    })
+
     
 
     app.post("/information", async (req, res)=> {
