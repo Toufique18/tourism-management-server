@@ -25,7 +25,21 @@ async function run() {
 
     const spotsCollection =client.db('touristsSpotsDB').collection('information');
 
+    app.get("/information", async (req, res)=> {
+        const coursor = spotsCollection.find();
+        const result = await coursor.toArray()
+        res.send(result)
+    })
 
+    app.get("/information/:userEmail", async (req, res)=> {
+        console.log(req.params.userEmail);
+        const result = await spotsCollection.find({userEmail:req.params.userEmail}).toArray();
+        console.log(result)
+        res.send(result)
+        
+    })
+   
+    
 
     app.post("/information", async (req, res)=> {
         const newInformation = req.body;
@@ -57,3 +71,5 @@ app.get('/', (req, res) =>{
 app.listen(port, () =>{
     console.log(`tourism server is running on port: ${port}`)
 })
+
+
