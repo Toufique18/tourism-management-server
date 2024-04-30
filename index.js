@@ -39,11 +39,35 @@ async function run() {
         
     })
    
-    app.get("/information/:id", async (req, res) => {
-        console.log(req.params.email);
-        const result = await spotsCollection.findOne({_id: new ObjectId (req.params.id),
-        })
+    app.put("/information/:id", async (req, res) => {
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert: true}
+        const updatedInfo = req.body
+        const Infor = {
+            $set: {
+                image: updatedInfo.image, 
+                tourists_spot_name: updatedInfo.tourists_spot_name, 
+                country_Name: updatedInfo.country_Name, 
+                location: updatedInfo.location, 
+                short_description: updatedInfo.short_description, 
+                average_cost: updatedInfo.average_cost, 
+                seasonality: updatedInfo.seasonality, 
+                travel_time: updatedInfo.travel_time, 
+                totalVisitorsPerYear: updatedInfo.totalVisitorsPerYear, 
+                userEmail: updatedInfo.userEmail, 
+                userName: updatedInfo.userName
+            }
+        }
+    
+        const result = await spotsCollection.updateOne(filter, Infor, options);
+        res.send(result)
+    
     })
+    
+
+
+
     app.delete("/information/:id", async (req, res) => {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
